@@ -1,0 +1,60 @@
+name: SmartSlice AI Windows preview
+
+on:
+  push:
+    branches:
+      - dev/smartslice-v0.1
+    paths:
+      - 'src/**'
+      - 'packaging/windows/**'
+      - '.github/workflows/smartslice-windows-preview.yml'
+      - 'CMakeLists.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  windows:
+    name: Compile Windows x64
+    uses: ./.github/workflows/build_check_cache.yml
+    with:
+      os: windows-latest
+      arch: x64
+      compiler: clang
+      build-deps-only: false
+      force-build: false
+
+  installer:
+    name: Package Windows installer
+    needs: windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get compiled portable app
+        uses: actions/download-artifact@v4
+        with:
+          pattern: OrcaSlicer_Windows_*_x64_portable
+          path: output/OrcaSlicer
+          merge-multiple: true
+      - name: Validate payload
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem output/OrcaSlicer -Recurse -Filter orca-slicer.exe | Select-Object -First 1
+          if (-not $exe) { throw 'Executable missing from portable artifact' }
+          "PAYLOAD=$($exe.Directory.FullName)" | Out-File -Append -FilePath $env:GITHUB_ENV
+      - name: Install packaging tool
+        shell: pwsh
+        run: choco install innosetup --yes --no-progress
+      - name: Build installer
+        shell: pwsh
+        run: |
+          .\packaging\windows\Build-SmartSliceInstaller.ps1 -ApplicationFolder "$env:PAYLOAD"
+      - name: Upload installer for testing
+        uses: actions/upload-artifact@v4
+        with:
+          name: SmartSliceAI-Windows-Preview-UNTESTED
+          path: dist/*.exe
+          if-no-files-found: error
+          retention-days: 14
