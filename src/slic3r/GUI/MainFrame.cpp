@@ -1,4 +1,5 @@
 #include "MainFrame.hpp"
+#include "SmartSliceAIDialog.hpp"
 
 #include <wx/event.h>
 #include "slic3r/GUI/Event.hpp"
