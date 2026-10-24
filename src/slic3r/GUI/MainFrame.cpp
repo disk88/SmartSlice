@@ -3792,15 +3792,16 @@ void MainFrame::init_menubar_as_editor()
 
     m_menubar->Append(calib_menu,wxString::Format("&%s", _L("Calibration")));
 
-    // SmartSlice AI is opt-in and does not modify any slicer settings in v0.1.
+    if (helpMenu)
+        m_menubar->Append(helpMenu, wxString::Format("&%s", _L("Help")));
+
+    // Append after Help so existing menu indexes on Windows remain unchanged.
+    // The smoke test never writes slicing parameters or printer commands.
     auto* ai_menu = new wxMenu();
     append_menu_item(ai_menu, wxID_ANY, "Test local AI...", "Connect to Ollama on this computer",
         [this](wxCommandEvent&) { show_smartslice_ai_dialog(this); }, "", nullptr,
         []() { return true; }, this);
     m_menubar->Append(ai_menu, "SmartSlice AI");
-
-    if (helpMenu)
-        m_menubar->Append(helpMenu, wxString::Format("&%s", _L("Help")));
     SetMenuBar(m_menubar);
 
 #endif
