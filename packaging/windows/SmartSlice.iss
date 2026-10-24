@@ -10,7 +10,7 @@
 AppId={{D364195B-6025-4B2D-99AA-BF0F775D8E31}
 AppName={#AppName}
 AppVersion={#AppVersion}
-DefaultDirName={autopf}\SmartSliceAI
+DefaultDirName={localappdata}\Programs\SmartSliceAI
 DefaultGroupName=SmartSlice AI
 OutputDir=..\..\dist
 OutputBaseFilename=SmartSliceAI-Windows-Setup-{#AppVersion}
