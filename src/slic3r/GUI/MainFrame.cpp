@@ -3791,6 +3791,14 @@ void MainFrame::init_menubar_as_editor()
         [this]() {return m_plater->is_view3D_shown();; }, this);
 
     m_menubar->Append(calib_menu,wxString::Format("&%s", _L("Calibration")));
+
+    // SmartSlice AI is opt-in and does not modify any slicer settings in v0.1.
+    auto* ai_menu = new wxMenu();
+    append_menu_item(ai_menu, wxID_ANY, "Test local AI...", "Connect to Ollama on this computer",
+        [this](wxCommandEvent&) { show_smartslice_ai_dialog(this); }, "", nullptr,
+        []() { return true; }, this);
+    m_menubar->Append(ai_menu, "SmartSlice AI");
+
     if (helpMenu)
         m_menubar->Append(helpMenu, wxString::Format("&%s", _L("Help")));
     SetMenuBar(m_menubar);
