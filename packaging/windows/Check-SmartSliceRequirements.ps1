@@ -1,9 +1,9 @@
-param([switch]$Quiet)
+﻿param([switch]$Quiet)
 $ErrorActionPreference = 'Stop'
 function Info($s) { if (-not $Quiet) { Write-Host $s } }
 $os = Get-CimInstance Win32_OperatingSystem
 $ramGB = [math]::Round((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB, 1)
-$freeGB = [math]::Round((Get-PSDrive -Name $env:SystemDrive.Substring(0,1)).Free / 1GB, 1)
+$freeGB = [math]::Round((Get-PSDrive -Name ($env:SystemDrive.Substring(0,1))).Free / 1GB, 1)
 $gpu = @(Get-CimInstance Win32_VideoController | Select-Object -ExpandProperty Name)
 $is64 = [Environment]::Is64BitOperatingSystem
 $major = [Environment]::OSVersion.Version.Major
