@@ -42,26 +42,9 @@ Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile
 Filename: "{app}\orca-slicer.exe"; Description: "Avvia SmartSlice AI"; Flags: nowait postinstall skipifsilent
 
 [Code]
-var
-  HardwareNotice: TNewStaticText;
-
 function InitializeSetup(): Boolean;
 begin
   Result := IsWin64;
-  if not Result then MsgBox('SmartSlice AI richiede Windows a 64 bit.', mbError, MB_OK);
-end;
-
-procedure InitializeWizard();
-begin
-  HardwareNotice := TNewStaticText.Create(WizardForm);
-  HardwareNotice.Parent := WizardForm.SelectTasksPage.Surface;
-  HardwareNotice.Top := WizardForm.TasksList.Top + WizardForm.TasksList.Height + ScaleY(16);
-  HardwareNotice.Left := ScaleX(0);
-  HardwareNotice.Width := WizardForm.SelectTasksPage.SurfaceWidth;
-  HardwareNotice.AutoSize := False;
-  HardwareNotice.Height := ScaleY(70);
-  HardwareNotice.WordWrap := True;
-  HardwareNotice.Caption :=
-    'SmartSlice può funzionare senza IA. L''opzione Ollama è separata e non installa nulla senza ulteriore conferma. ' +
-    'Per l''IA locale sono raccomandati almeno 16 GB di RAM e spazio libero sufficiente.';
+  if not Result then
+    MsgBox('SmartSlice AI richiede Windows a 64 bit.', mbError, MB_OK);
 end;
