@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName PresentationFramework
 function Ask($message,$title='SmartSlice AI') {
   return [System.Windows.MessageBox]::Show($message,$title,'YesNo','Question') -eq 'Yes'
