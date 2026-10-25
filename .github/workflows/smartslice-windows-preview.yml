@@ -26,9 +26,34 @@ jobs:
       build-deps-only: false
       force-build: false
 
+  script_checks:
+    name: Validate Windows PowerShell 5.1 setup scripts
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse setup scripts with Windows PowerShell 5.1
+        shell: powershell
+        run: |
+          $paths = @(
+            'packaging/windows/Check-SmartSliceRequirements.ps1',
+            'packaging/windows/AI-Setup.ps1'
+          )
+          foreach ($path in $paths) {
+            $tokens = $null
+            $errors = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile(
+              (Resolve-Path $path).Path, [ref]$tokens, [ref]$errors
+            )
+            if ($errors.Count -gt 0) {
+              foreach ($item in $errors) { Write-Error "$path : $item" }
+              throw "PowerShell parsing failed for $path"
+            }
+            Write-Host "Valid PowerShell 5.1: $path"
+          }
+
   installer:
     name: Package Windows installer
-    needs: windows
+    needs: [windows, script_checks]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
