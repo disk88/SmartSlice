@@ -3627,6 +3627,13 @@ void MainFrame::init_menubar_as_editor()
     //m_topbar->AddDropDownMenuItem(language_item);
     //m_topbar->AddDropDownMenuItem(config_item);
     top_menu->AppendSeparator();
+    // Windows uses BBLTopbar's custom dropdown, not the native wxMenuBar.
+    auto* smartslice_ai_menu = new wxMenu();
+    append_menu_item(smartslice_ai_menu, wxID_ANY, "Gestione AI locale...",
+        "Collega Ollama, scegli o scarica un modello e prova una risposta",
+        [this](wxCommandEvent&) { show_smartslice_ai_dialog(this); }, "", nullptr,
+        []() { return true; }, this);
+    m_topbar->AddDropDownSubMenu(smartslice_ai_menu, "SmartSlice AI");
     m_topbar->AddDropDownSubMenu(helpMenu, _L("Help"));
 
     // SoftFever calibrations
